@@ -1,3 +1,4 @@
+I have created a prototype of disaster management website in this i have used a.i tools to develop
 # Aegis — AI-Powered Disaster Risk Intelligence & Multi-Agency Early Warning Platform
 
 **SIH Problem ID:** SIH26191  
