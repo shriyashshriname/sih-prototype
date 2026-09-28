@@ -18,6 +18,8 @@ import AlertCenter from './pages/AlertCenter';
 import CitizenPortal from './pages/CitizenPortal';
 import EmergencyAgency from './pages/EmergencyAgency';
 import MapPage from './pages/MapPage';
+import AIRiskAssessment from './pages/AIRiskAssessment';
+import EvacuationRoutes from './pages/EvacuationRoutes';
 
 // Layout wrapper for authority/agency views (with sidebar)
 function AppLayout({ children }) {
@@ -162,6 +164,26 @@ export default function App() {
               <AuthGuard>
                 <AppLayout>
                   <AlertCenter />
+                </AppLayout>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/ai-risk-assessment"
+            element={
+              <AuthGuard>
+                <AppLayout>
+                  <AIRiskAssessment />
+                </AppLayout>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/evacuation-routes"
+            element={
+              <AuthGuard>
+                <AppLayout>
+                  <EvacuationRoutes />
                 </AppLayout>
               </AuthGuard>
             }

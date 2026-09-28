@@ -1,8 +1,8 @@
 I have created a prototype of disaster management website in this i have used a.i tools to develop
 # Aegis — AI-Powered Disaster Risk Intelligence & Multi-Agency Early Warning Platform
 
-**SIH Problem ID:** SIH26191  
-**Status:** ✅ Working Prototype  
+**SIH Problem ID:** SIH26191
+**Status:** ✅ Working Prototype
 ⚠️ **All data is SYNTHETIC/DEMO — Not live government data**
 
 ---
@@ -10,10 +10,12 @@ I have created a prototype of disaster management website in this i have used a.
 ## Quick Start (2 commands)
 
 ### Prerequisites
+
 - Node.js 18+ (https://nodejs.org)
 - npm 9+
 
 ### 1. Start the API Server
+
 ```bash
 cd server
 npm install
@@ -23,6 +25,7 @@ npm start
 ```
 
 ### 2. Start the Frontend
+
 ```bash
 # In a new terminal
 cd client
@@ -40,29 +43,31 @@ Open **http://localhost:5173** in your browser.
 ## What's Built
 
 ### Core Features
-| Feature | Status |
-|---|---|
-| GIS Map with Leaflet + OpenStreetMap | ✅ |
-| 17 synthetic village risk markers | ✅ |
-| Transparent weighted flood risk engine | ✅ |
-| Risk explainability ("Why is this area at risk?") | ✅ |
-| Multi-agency alert simulation | ✅ |
-| Alert acknowledge + resolve workflow | ✅ |
-| Citizen portal with village search | ✅ |
-| Emergency agency filtered view | ✅ |
-| Decision support recommendations | ✅ |
-| Loading + error states | ✅ |
-| Prototype/demo data disclaimers | ✅ |
+
+| Feature                                           | Status |
+| ------------------------------------------------- | ------ |
+| GIS Map with Leaflet + OpenStreetMap              | ✅     |
+| 17 synthetic village risk markers                 | ✅     |
+| Transparent weighted flood risk engine            | ✅     |
+| Risk explainability ("Why is this area at risk?") | ✅     |
+| Multi-agency alert simulation                     | ✅     |
+| Alert acknowledge + resolve workflow              | ✅     |
+| Citizen portal with village search                | ✅     |
+| Emergency agency filtered view                    | ✅     |
+| Decision support recommendations                  | ✅     |
+| Loading + error states                            | ✅     |
+| Prototype/demo data disclaimers                   | ✅     |
 
 ### Pages
-| Route | Description | User Role |
-|---|---|---|
-| `/` | Authority dashboard — KPIs, map, risk list | Govt / Authority |
-| `/map` | Full-screen GIS map | All |
-| `/village/:id` | Village risk detail + explainability | Authority |
-| `/alerts` | Multi-agency alert center | Authority |
-| `/agency` | Agency-filtered alert view | Emergency Agency |
-| `/citizen` | Public search portal | Citizen |
+
+| Route            | Description                                 | User Role        |
+| ---------------- | ------------------------------------------- | ---------------- |
+| `/`            | Authority dashboard — KPIs, map, risk list | Govt / Authority |
+| `/map`         | Full-screen GIS map                         | All              |
+| `/village/:id` | Village risk detail + explainability        | Authority        |
+| `/alerts`      | Multi-agency alert center                   | Authority        |
+| `/agency`      | Agency-filtered alert view                  | Emergency Agency |
+| `/citizen`     | Public search portal                        | Citizen          |
 
 ---
 
@@ -78,6 +83,7 @@ Flood Risk Score (0–100) =
 ```
 
 **Categories:**
+
 - 0–25 → 🟢 Low
 - 26–50 → 🟡 Moderate
 - 51–75 → 🟠 High
@@ -124,32 +130,32 @@ sih prototype/
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/health` | Health check |
-| GET | `/api/villages` | All 17 villages with risk scores |
-| GET | `/api/villages/search?q=name` | Village search |
-| GET | `/api/villages/:id` | Village detail + risk factors + recommendations |
-| GET | `/api/risk/summary` | Dashboard statistics |
-| GET | `/api/alerts?status=active&agency=Police` | Filtered alerts |
-| POST | `/api/alerts/simulate/:villageId` | Simulate alerts for a village |
-| PUT | `/api/alerts/:id/acknowledge` | Acknowledge alert |
-| PUT | `/api/alerts/:id/resolve` | Resolve alert |
+| Method | Endpoint                                    | Description                                     |
+| ------ | ------------------------------------------- | ----------------------------------------------- |
+| GET    | `/api/health`                             | Health check                                    |
+| GET    | `/api/villages`                           | All 17 villages with risk scores                |
+| GET    | `/api/villages/search?q=name`             | Village search                                  |
+| GET    | `/api/villages/:id`                       | Village detail + risk factors + recommendations |
+| GET    | `/api/risk/summary`                       | Dashboard statistics                            |
+| GET    | `/api/alerts?status=active&agency=Police` | Filtered alerts                                 |
+| POST   | `/api/alerts/simulate/:villageId`         | Simulate alerts for a village                   |
+| PUT    | `/api/alerts/:id/acknowledge`             | Acknowledge alert                               |
+| PUT    | `/api/alerts/:id/resolve`                 | Resolve alert                                   |
 
 ---
 
 ## Technology Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React.js 19 (Vite) |
-| Styling | Tailwind CSS v4 |
-| Map | Leaflet.js + OpenStreetMap |
-| Routing | React Router DOM v7 |
-| Backend | Node.js + Express.js |
-| Data | In-memory store (no DB required) |
-| HTTP client | Axios |
-| Notifications | react-hot-toast |
+| Layer         | Technology                       |
+| ------------- | -------------------------------- |
+| Frontend      | React.js 19 (Vite)               |
+| Styling       | Tailwind CSS v4                  |
+| Map           | Leaflet.js + OpenStreetMap       |
+| Routing       | React Router DOM v7              |
+| Backend       | Node.js + Express.js             |
+| Data          | In-memory store (no DB required) |
+| HTTP client   | Axios                            |
+| Notifications | react-hot-toast                  |
 
 ---
 

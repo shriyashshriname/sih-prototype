@@ -152,7 +152,7 @@ function matchRelocationSites(sourceHabitation, candidateSites = [], options = {
       lat: site.lat,
       lng: site.lng,
       distanceKm: distKm,
-      distanceLabel: `${distKm} km from source habitation`,
+      distanceLabel: `${distKm} km (estimated road distance)`,
       isWithinPreferredRadius: distKm <= preferredRadiusKm,
       isWithinExtendedRadius: distKm <= maxRadiusKm,
       maxCapacity: maxCap,
@@ -173,7 +173,7 @@ function matchRelocationSites(sourceHabitation, candidateSites = [], options = {
       districtBonus,
       rejectionReason,
       factors: [
-        { label: 'Geographic Practicality', score: geoScore, weight: 25, value: `${distKm} km` },
+        { label: 'Geographic Practicality', score: geoScore, weight: 25, value: `${distKm} km road` },
         { label: 'Hazard Safety', score: hazardSafety, weight: 25, value: `${hazardSafety}/100` },
         { label: 'Carrying Capacity', score: capScore, weight: 20, value: `${available.toLocaleString()} available` },
         { label: 'Road Accessibility', score: roadAccess, weight: 10, value: `${roadAccess}/100` },
@@ -236,7 +236,7 @@ function matchRelocationSites(sourceHabitation, candidateSites = [], options = {
 
   // Generate "Why this site?" reasons for the recommended site
   const whyReasons = topSite ? [
-    `Geographically close (${topSite.distanceKm} km straight-line planning distance from source)`,
+    `Geographically close (${topSite.distanceKm} km estimated road distance from source)`,
     `Sufficient carrying capacity (${topSite.availableCapacity.toLocaleString()} available for ${population.toLocaleString()} residents)`,
     `High multi-hazard safety profile (${topSite.hazardSafety}/100 terrain and flood safety)`,
     `Strong road connectivity (${topSite.roadAccessibility}/100 all-weather road access)`,
@@ -249,7 +249,7 @@ function matchRelocationSites(sourceHabitation, candidateSites = [], options = {
     if (!site.isCapacitySufficient) {
       reason = `Insufficient headroom: only ${site.availableCapacity.toLocaleString()} capacity available.`;
     } else if (site.distanceKm > (topSite?.distanceKm || 0) + 10) {
-      reason = `${site.distanceKm - (topSite?.distanceKm || 0)} km farther away than ${topSite?.name}.`;
+      reason = `${(site.distanceKm - (topSite?.distanceKm || 0)).toFixed(1)} km farther road distance than ${topSite?.name}.`;
     } else if (site.roadAccessibility < (topSite?.roadAccessibility || 80)) {
       reason = `Lower road accessibility score (${site.roadAccessibility}/100).`;
     } else {

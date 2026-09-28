@@ -1,0 +1,146 @@
+version: "3.9"
+
+networks:
+  aegis-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+services:
+  # ─────────────────────────────────────────────
+  # Database: PostgreSQL 16 + PostGIS 3.4
+  # ─────────────────────────────────────────────
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: aegis_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-aegis_db}
+      POSTGRES_USER: ${POSTGRES_USER:-aegis}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aegis_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - aegis-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aegis} -d ${POSTGRES_DB:-aegis_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ─────────────────────────────────────────────
+  # Cache: Redis 7
+  # ─────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: aegis_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - aegis-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # ─────────────────────────────────────────────
+  # AI Engine: Python FastAPI (Port 8000)
+  # ─────────────────────────────────────────────
+  ai-engine:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    container_name: aegis_ai_engine
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://aegis:aegis_password@db:5432/aegis_db}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY:-}
+      NODE_ENV: ${NODE_ENV:-production}
+    ports:
+      - "8000:8000"
+    networks:
+      - aegis-network
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ─────────────────────────────────────────────
+  # Backend Server: Node.js / Express (Port 5000)
+  # ─────────────────────────────────────────────
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: aegis_server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-5000}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://aegis:aegis_password@db:5432/aegis_db}
+      JWT_SECRET: ${JWT_SECRET:-aegis-super-secret-key-change-in-production}
+      AI_ENGINE_URL: ${AI_ENGINE_URL:-http://ai-engine:8000}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:5173}
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY:-}
+    ports:
+      - "5000:5000"
+    networks:
+      - aegis-network
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ai-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || wget -q -O - http://localhost:5000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 25s
+
+  # ─────────────────────────────────────────────
+  # Frontend Client: React / Vite → Nginx (Port 80)
+  # ─────────────────────────────────────────────
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: aegis_client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - aegis-network
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || wget -q -O - http://localhost:80 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s

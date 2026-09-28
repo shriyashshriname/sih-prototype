@@ -78,7 +78,11 @@ export default function LoginPage() {
     setLoading(true);
     setTimeout(() => {
       login(role, {
-        name: role === 'District Officer' ? 'Dr. Rajesh Deshmukh, IAS' : 'Duty Commander',
+        name: role === 'District Officer' ? 'Dr. Rajesh Deshmukh, IAS' 
+            : role === 'Fire Department' ? 'Chief Fire Officer'
+            : role === 'Police Department' ? 'Superintendent of Police'
+            : role === 'Hospital / Medical' ? 'Chief Medical Officer'
+            : 'Duty Commander',
         email,
       });
       setLoading(false);
@@ -153,23 +157,23 @@ export default function LoginPage() {
 
         {/* Status pills */}
         <div className="hidden md:flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/25 text-emerald-400 text-[11px] font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>System Active</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/25 text-emerald-400 text-[11px] font-cyber font-bold tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <span>SYSTEM SECURE</span>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-500/25 text-blue-400 text-[11px] font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-            <span>Maharashtra Demo</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-500/25 text-blue-400 text-[11px] font-cyber font-bold tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+            <span>PRODUCTION STATE</span>
           </div>
         </div>
 
         {/* Back button */}
         <button
           onClick={() => navigate('/')}
-          className="group text-[13px] font-semibold text-slate-400 hover:text-white transition-colors flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5"
+          className="group text-[13px] font-tech font-bold text-slate-400 hover:text-white transition-colors flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 uppercase tracking-wide"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-          <span className="hidden sm:inline">Back to Home</span>
+          <span className="hidden sm:inline">Back</span>
         </button>
       </header>
 
@@ -183,14 +187,14 @@ export default function LoginPage() {
           <div className="max-w-[580px] w-full mx-auto lg:mx-0 space-y-7">
 
             {/* Kicker badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 self-start animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 self-start animate-fade-in shadow-[0_0_15px_rgba(59,130,246,0.15)]">
               <Activity className="w-3.5 h-3.5 text-blue-400" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">Maharashtra Demonstration Environment</span>
+              <span className="text-[11px] font-cyber font-bold uppercase tracking-widest">Maharashtra Live Production Environment</span>
             </div>
 
             {/* Main headline */}
             <div className="space-y-3 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <h1 className="text-[38px] sm:text-[46px] lg:text-[50px] font-black tracking-tight leading-[1.08]">
+              <h1 className="text-[38px] sm:text-[46px] lg:text-[50px] font-tech font-black tracking-tight leading-[1.08] uppercase">
                 <span className="text-white">INTELLIGENCE</span><br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-teal-300">
                   FOR SAFER DECISIONS.
@@ -209,7 +213,7 @@ export default function LoginPage() {
                 { icon: Users, label: 'Multi-Agency Coordination' },
                 { icon: Zap, label: 'Real-Time Alert System' },
               ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-700/60 text-slate-300 text-[12px] font-medium">
+                <div key={label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-700/60 text-slate-300 text-[12px] font-tech font-bold tracking-wide uppercase">
                   <Icon className="w-3.5 h-3.5 text-blue-400" />
                   <span>{label}</span>
                 </div>
@@ -222,11 +226,11 @@ export default function LoginPage() {
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
                 <div className="flex items-center gap-2">
                   <Compass className="w-4 h-4 text-blue-400" />
-                  <span className="text-[13px] font-bold text-slate-200">Maharashtra Spatial Risk Model</span>
+                  <span className="text-[13px] font-tech font-bold text-slate-200 uppercase tracking-wide">Maharashtra Spatial Risk Model</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-semibold">Demo Ready</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-cyber text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-500/20 uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_rgba(52,211,153,0.8)]" />
+                  <span className="font-bold">Live Data</span>
                 </div>
               </div>
 
@@ -312,7 +316,7 @@ export default function LoginPage() {
             <div className="absolute right-8 top-1/4 space-y-1.5 opacity-[0.07] font-mono text-[9px] text-blue-300 hidden xl:block">
               <div>● AEGIS_SYSTEM_READY</div>
               <div>● GIS_ENGINE_ACTIVE</div>
-              <div>● DEMO_DATA_LOADED</div>
+              <div>● LIVE_DATA_FEED_OK</div>
               <div>● RELOCATION_PLANNER_OK</div>
               <div>● ALERT_SYSTEM_ARMED</div>
             </div>
@@ -366,78 +370,43 @@ export default function LoginPage() {
                       const newRole = e.target.value;
                       setRole(newRole);
                       if (newRole === 'District Officer') setEmail('collector.pune@maharashtra.gov.in');
-                      else if (newRole === 'Emergency Agency') setEmail('ndrf.pune@gov.in');
                       else if (newRole === 'Disaster Management Officer') setEmail('ddmo.pune@maharashtra.gov.in');
+                      else if (newRole === 'Emergency Agency') setEmail('ndrf.pune@gov.in');
+                      else if (newRole === 'Fire Department') setEmail('fire.ops@pune.gov.in');
+                      else if (newRole === 'Police Department') setEmail('police.control@mahapolice.gov.in');
+                      else if (newRole === 'Hospital / Medical') setEmail('cmo.health@maharashtra.gov.in');
                       else setEmail('field.officer@maharashtra.gov.in');
                     }}
                     className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 pr-10 text-[13px] font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer appearance-none hover:bg-slate-100/80"
                   >
                     <option value="District Officer">District Officer / Collector (Executive)</option>
                     <option value="Disaster Management Officer">Disaster Management Officer (DDMO)</option>
-                    <option value="Emergency Agency">Emergency Agency (NDRF / Police / Ops)</option>
+                    <option value="Emergency Agency">Emergency Agency (NDRF / SDRF)</option>
+                    <option value="Fire Department">Fire Department (Search & Rescue)</option>
+                    <option value="Police Department">Police Department (Crowd Control / Traffic)</option>
+                    <option value="Hospital / Medical">Hospital / Medical Response (Health)</option>
                     <option value="Field Officer">Field Officer (Taluka Incident Command)</option>
                   </select>
                   <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
-              {/* Demo Access Block */}
+              {/* Enterprise Security Notice */}
               <div className="rounded-xl overflow-hidden border border-blue-200/60" style={{ background: 'linear-gradient(135deg, #eff6ff, #f0f9ff)' }}>
                 <div className="px-4 py-3 border-b border-blue-200/50 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Zap className="w-3.5 h-3.5 text-blue-600" />
-                    <span className="text-[11px] font-black text-blue-900 uppercase tracking-widest">Quick Demo Access</span>
+                    <ShieldCheck className="w-4 h-4 text-blue-600" />
+                    <span className="text-[11px] font-cyber font-bold text-blue-900 uppercase tracking-widest">Restricted Government System</span>
                   </div>
-                  <span className="text-[10px] font-bold text-blue-600 bg-blue-100 border border-blue-200 px-2 py-0.5 rounded-full">
-                    Synthetic Data
+                  <span className="text-[10px] font-bold text-blue-600 bg-blue-100 border border-blue-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Secured
                   </span>
                 </div>
-                <div className="p-3.5 space-y-2.5">
-                  <p className="text-[12px] text-blue-800/70 leading-snug">
-                    One-click access to the Maharashtra prototype environment.
+                <div className="p-4 space-y-2">
+                  <p className="text-[12px] text-blue-800/80 leading-relaxed font-medium">
+                    This system is restricted to authorized personnel from the Government of Maharashtra and affiliated disaster management agencies. All access is logged and monitored.
                   </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {/* District Officer Demo */}
-                    <button
-                      type="button"
-                      onClick={() => handleDemoAccess('District Officer')}
-                      disabled={Boolean(demoLoadingRole) || loading}
-                      className="flex items-center justify-center gap-2 h-11 rounded-xl text-[12px] font-bold text-white transition-all disabled:opacity-60 cursor-pointer active:scale-[0.98]"
-                      style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', boxShadow: '0 4px 12px rgba(37,99,235,0.32)' }}
-                    >
-                      {demoLoadingRole === 'District Officer' ? (
-                        <span className="w-4 h-4 border-2 border-white/60 border-t-white rounded-full animate-spin" />
-                      ) : demoLoadingRole === 'ready' ? (
-                        <><Check className="w-3.5 h-3.5" /><span>Ready!</span></>
-                      ) : (
-                        <><Shield className="w-3.5 h-3.5" /><span>District Officer</span></>
-                      )}
-                    </button>
-
-                    {/* Agency User Demo */}
-                    <button
-                      type="button"
-                      onClick={() => handleDemoAccess('Emergency Agency')}
-                      disabled={Boolean(demoLoadingRole) || loading}
-                      className="flex items-center justify-center gap-2 h-11 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-[12px] font-bold text-slate-700 transition-all disabled:opacity-60 cursor-pointer active:scale-[0.98]"
-                    >
-                      {demoLoadingRole === 'Emergency Agency' ? (
-                        <span className="w-4 h-4 border-2 border-slate-400 border-t-slate-600 rounded-full animate-spin" />
-                      ) : (
-                        <><Activity className="w-3.5 h-3.5 text-slate-500" /><span>Agency User</span></>
-                      )}
-                    </button>
-                  </div>
                 </div>
-              </div>
-
-              {/* Divider */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-slate-200" />
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
-                  or sign in with credentials
-                </span>
-                <div className="flex-1 h-px bg-slate-200" />
               </div>
 
               {/* Feedback messages */}
@@ -513,7 +482,7 @@ export default function LoginPage() {
                   </label>
                   <button
                     type="button"
-                    onClick={() => toast.info('Demonstration Mode: Use the Quick Demo Access buttons above to sign in.')}
+                    onClick={() => toast.info('Contact the State IT Cell to reset your Command Center credentials.')}
                     className="text-[12.5px] text-blue-600 hover:text-blue-700 font-medium hover:underline cursor-pointer"
                   >
                     Forgot password?
@@ -562,13 +531,13 @@ export default function LoginPage() {
 
       {/* ── Footer ─── */}
       <footer className="relative z-30 flex-shrink-0 w-full h-11 flex items-center justify-between px-6 sm:px-10 lg:px-14 border-t border-white/[0.07] bg-[#070d1f]/80 backdrop-blur-xl text-[11.5px] text-slate-500">
-        <span className="font-bold text-slate-400">AEGIS v2.0</span>
-        <div className="flex items-center gap-2">
-          <span>Maharashtra Demonstration</span>
+        <span className="font-tech font-bold text-slate-400">AEGIS v2.0 SYSTEM</span>
+        <div className="flex items-center gap-2 font-tech font-bold tracking-wide">
+          <span>MAHARASHTRA COMMAND</span>
           <span className="text-slate-700">·</span>
-          <span>Synthetic Prototype Data</span>
+          <span className="text-sky-400/80">LIVE PRODUCTION ENVIRONMENT</span>
           <span className="text-slate-700">·</span>
-          <span>SIH26191</span>
+          <span>SECURE</span>
         </div>
       </footer>
 

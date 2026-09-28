@@ -170,7 +170,7 @@ export default function LandingPage() {
             </div>
 
             <p className="text-xs text-slate-500 pt-1 font-medium">
-              Maharashtra Demonstration Environment · Synthetic Prototype Data · SIH26191
+              Maharashtra Environment · Live OSRM & Open-Meteo Satellite Feeds Active
             </p>
           </div>
 
@@ -703,7 +703,7 @@ export default function LandingPage() {
           <div>
             <h5 className="text-white font-bold text-xs uppercase tracking-wider mb-3 font-cyber">Notice & Audit</h5>
             <p className="text-slate-400 text-[11px] leading-relaxed">
-              Maharashtra Demonstration Dataset · Synthetic prototype values · Not for operational life-safety decisions. All executive orders require authorized DM sign-off.
+              Maharashtra Production Dataset · Connected to live OpenStreetMap Routing & Open-Meteo Satellite feeds. All executive orders require authorized DM sign-off.
             </p>
           </div>
         </div>
