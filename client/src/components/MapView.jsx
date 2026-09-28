@@ -74,7 +74,7 @@ export default function MapView({
       subdomains: ['a', 'b', 'c', 'd'],
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Aegis AI',
       maxZoom: 18,
-      className: 'map-tiles-dark'
+      
     }).addTo(map);
 
     // Dark Legend
