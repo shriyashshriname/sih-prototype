@@ -105,10 +105,7 @@ export default function EvacuationRoutes() {
       zoomControl: true,
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors | Maharashtra Emergency Route Matrix',
-      maxZoom: 18,
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors | Maharashtra Emergency Route Matrix', maxZoom: 18, className: 'map-tiles-dark' }).addTo(map);
 
     mapInstance.current = map;
   }, []);
@@ -309,3 +306,4 @@ export default function EvacuationRoutes() {
     </div>
   );
 }
+

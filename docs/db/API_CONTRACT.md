@@ -1,8 +1,8 @@
 # Aegis AI — Database API Contract
 
-> **Audience:** Backend / API team  
-> **Purpose:** Canonical reference for column names, types, computed vs stored fields, and query patterns  
-> **Schema version:** `001_initial_schema.sql`  
+> **Audience:** Backend / API team
+> **Purpose:** Canonical reference for column names, types, computed vs stored fields, and query patterns
+> **Schema version:** `001_initial_schema.sql`
 
 ---
 
@@ -10,16 +10,16 @@
 
 ### 1.1 `habitations` — Key Fields
 
-| Field | DB Column | Type | Computed? | Source |
-|-------|-----------|------|-----------|--------|
-| Habitation ID | `id` | UUID | No | Primary key |
-| District | `district_id` | UUID FK | No | Foreign key |
-| Location | `geometry` | GEOGRAPHY(POINT,4326) | No | Stored |
-| Risk score | `risk_score` | FLOAT | **Denormalized** | Written by ML service after each `risk_assessments` insert |
-| Risk category | `risk_category` | VARCHAR | **Denormalized** | Same as above |
-| Red zone flag | `red_zone_status` | BOOLEAN | No | Set by district officer |
-| Priority score | `relocation_priority_score` | FLOAT | No | Stored — set by relocation algorithm |
-| Available capacity | *(not a column)* | — | **Computed in query** | `max_capacity - current_occupancy - reserved_capacity` on `relocation_sites` |
+| Field              | DB Column                     | Type                  | Computed?                   | Source                                                                           |
+| ------------------ | ----------------------------- | --------------------- | --------------------------- | -------------------------------------------------------------------------------- |
+| Habitation ID      | `id`                        | UUID                  | No                          | Primary key                                                                      |
+| District           | `district_id`               | UUID FK               | No                          | Foreign key                                                                      |
+| Location           | `geometry`                  | GEOGRAPHY(POINT,4326) | No                          | Stored                                                                           |
+| Risk score         | `risk_score`                | FLOAT                 | **Denormalized**      | Written by ML service after each`risk_assessments` insert                      |
+| Risk category      | `risk_category`             | VARCHAR               | **Denormalized**      | Same as above                                                                    |
+| Red zone flag      | `red_zone_status`           | BOOLEAN               | No                          | Set by district officer                                                          |
+| Priority score     | `relocation_priority_score` | FLOAT                 | No                          | Stored — set by relocation algorithm                                            |
+| Available capacity | *(not a column)*            | —                    | **Computed in query** | `max_capacity - current_occupancy - reserved_capacity` on `relocation_sites` |
 
 > [!IMPORTANT]
 > When the ML service writes a new `risk_assessments` row, it **must also UPDATE** `habitations.risk_score`, `habitations.risk_category`, and `habitations.last_assessment_at` to keep the denormalized fields in sync.
@@ -28,14 +28,15 @@
 
 ### 1.2 `relocation_sites` — Capacity Fields
 
-| Field | Column | Computed? | Notes |
-|-------|--------|-----------|-------|
-| Total beds | `max_capacity` | No | Hard limit — never exceeded |
-| Occupied | `current_occupancy` | No | Updated when plan status → `completed` |
-| Reserved | `reserved_capacity` | No | Updated when plan status → `active` (approved) |
-| Available | *(query)* | Yes | `max_capacity - current_occupancy - reserved_capacity` |
+| Field      | Column                | Computed? | Notes                                                    |
+| ---------- | --------------------- | --------- | -------------------------------------------------------- |
+| Total beds | `max_capacity`      | No        | Hard limit — never exceeded                             |
+| Occupied   | `current_occupancy` | No        | Updated when plan status →`completed`                 |
+| Reserved   | `reserved_capacity` | No        | Updated when plan status →`active` (approved)         |
+| Available  | *(query)*           | Yes       | `max_capacity - current_occupancy - reserved_capacity` |
 
 **Query pattern:**
+
 ```sql
 SELECT
     id, name, site_type,
@@ -57,6 +58,7 @@ ORDER BY suitability_score DESC;
 ### 1.3 `risk_assessments` — JSONB Field Schemas
 
 #### `feature_values` (JSONB)
+
 ```json
 {
   "elevation_asl": 680.0,
@@ -73,6 +75,7 @@ ORDER BY suitability_score DESC;
 ```
 
 #### `shap_values` (JSONB)
+
 ```json
 {
   "slope_degrees": 24.1,
@@ -85,6 +88,7 @@ ORDER BY suitability_score DESC;
 ```
 
 #### `top_factors` (JSONB array)
+
 ```json
 [
   {"factor": "slope_degrees", "shap_value": 24.1, "direction": "up"},
@@ -94,6 +98,7 @@ ORDER BY suitability_score DESC;
 ```
 
 #### `recommendations` (JSONB array)
+
 ```json
 [
   {"action": "Immediate mandatory evacuation", "priority": 1, "agency": "NDRF"},
@@ -105,6 +110,7 @@ ORDER BY suitability_score DESC;
 ---
 
 ### 1.4 `relocation_plans` — `priority_groups` JSONB
+
 ```json
 [
   {"group": "elderly", "count": 195},
@@ -118,6 +124,7 @@ ORDER BY suitability_score DESC;
 ---
 
 ### 1.5 `evacuation_routes` — `waypoints` JSONB
+
 ```json
 [
   {"seq": 1, "lat": 19.6948, "lng": 73.5585, "name": "Igatpuri Khurd", "notes": "Start"},
@@ -129,6 +136,7 @@ ORDER BY suitability_score DESC;
 ---
 
 ### 1.6 `relocation_sites` — `facilities` JSONB
+
 ```json
 {
   "water": true,
@@ -144,6 +152,7 @@ ORDER BY suitability_score DESC;
 ---
 
 ### 1.7 `weather_snapshots` — `forecast_24h` JSONB
+
 ```json
 [
   {"hour": 0,  "rainfall_mm": 25.0, "temp_celsius": 20.5, "humidity_pct": 98, "condition": "very_heavy_rain"},
@@ -154,7 +163,7 @@ ORDER BY suitability_score DESC;
 ]
 ```
 
-**Weather `condition` vocabulary:**  
+**Weather `condition` vocabulary:**
 `clear`, `drizzle`, `light_rain`, `moderate_rain`, `heavy_rain`, `very_heavy_rain`, `extremely_heavy_rain`, `thunderstorm`, `cyclone`
 
 ---
@@ -162,6 +171,7 @@ ORDER BY suitability_score DESC;
 ## 2. Query Patterns
 
 ### 2.1 All Critical/High habitations in a district (risk dashboard)
+
 ```sql
 SELECT
     h.id, h.name, h.taluka,
@@ -176,6 +186,7 @@ ORDER BY h.risk_score DESC;
 ```
 
 ### 2.2 Latest risk assessment for a habitation
+
 ```sql
 SELECT *
 FROM risk_assessments
@@ -183,12 +194,15 @@ WHERE habitation_id = :habitation_id
 ORDER BY assessed_at DESC
 LIMIT 1;
 ```
+
 Or use the view:
+
 ```sql
 SELECT * FROM v_habitation_latest_risk WHERE habitation_id = :habitation_id;
 ```
 
 ### 2.3 Habitations within a red zone polygon (spatial join)
+
 ```sql
 SELECT h.id, h.name, h.risk_score, h.population
 FROM habitations h
@@ -197,6 +211,7 @@ WHERE rz.id = :red_zone_id;
 ```
 
 ### 2.4 Nearest available relocation sites to a habitation
+
 ```sql
 SELECT
     rs.id, rs.name, rs.site_type,
@@ -214,6 +229,7 @@ LIMIT 5;
 ```
 
 ### 2.5 All active alerts (dashboard polling)
+
 ```sql
 SELECT
     a.id, a.alert_type, a.severity, a.title, a.message,
@@ -235,6 +251,7 @@ ORDER BY
 ```
 
 ### 2.6 Relocation plan approval workflow
+
 ```sql
 -- Approve a plan
 UPDATE relocation_plans
@@ -254,6 +271,7 @@ WHERE id = :site_id;
 ```
 
 ### 2.7 Mark relocation plan complete (move reserved → occupied)
+
 ```sql
 BEGIN;
 
@@ -272,6 +290,7 @@ COMMIT;
 ```
 
 ### 2.8 PostGIS — Geometry to GeoJSON (API response)
+
 ```sql
 -- Single point
 SELECT ST_AsGeoJSON(geometry::geometry) AS geojson FROM habitations WHERE id = :id;
@@ -289,6 +308,7 @@ WHERE h.id = :hab_id AND rs.id = :site_id;
 ```
 
 ### 2.9 Weather — Latest snapshot per district
+
 ```sql
 SELECT DISTINCT ON (district_id) *
 FROM weather_snapshots
@@ -297,6 +317,7 @@ ORDER BY district_id, recorded_at DESC;
 ```
 
 ### 2.10 Habitations in red zones (bulk spatial check)
+
 ```sql
 SELECT DISTINCT h.id, h.name, h.district_id, rz.name AS red_zone_name
 FROM habitations h
@@ -310,37 +331,42 @@ WHERE h.district_id = :district_id;
 ## 3. Status Enums Reference
 
 ### `relocation_plans.status`
-| Value | Meaning |
-|-------|---------|
-| `draft` | Created, not yet submitted for approval |
-| `active` | Approved and in execution |
-| `completed` | Population successfully relocated |
-| `cancelled` | Cancelled by officer |
+
+| Value         | Meaning                                 |
+| ------------- | --------------------------------------- |
+| `draft`     | Created, not yet submitted for approval |
+| `active`    | Approved and in execution               |
+| `completed` | Population successfully relocated       |
+| `cancelled` | Cancelled by officer                    |
 
 ### `relocation_plans.approval_status`
-| Value | Meaning |
-|-------|---------|
-| `pending` | Awaiting district officer review |
-| `approved` | Approved — `approved_by` and `approved_at` must be set |
-| `rejected` | Rejected — plan must be revised |
+
+| Value        | Meaning                                                    |
+| ------------ | ---------------------------------------------------------- |
+| `pending`  | Awaiting district officer review                           |
+| `approved` | Approved —`approved_by` and `approved_at` must be set |
+| `rejected` | Rejected — plan must be revised                           |
 
 ### `alerts.status`
-| Value | Meaning |
-|-------|---------|
-| `active` | Live alert — visible on dashboards |
-| `acknowledged` | Seen by officer — `acknowledged_by` and `acknowledged_at` set |
-| `resolved` | Situation resolved |
-| `expired` | Auto-expired by TTL job |
+
+| Value            | Meaning                                                           |
+| ---------------- | ----------------------------------------------------------------- |
+| `active`       | Live alert — visible on dashboards                               |
+| `acknowledged` | Seen by officer —`acknowledged_by` and `acknowledged_at` set |
+| `resolved`     | Situation resolved                                                |
+| `expired`      | Auto-expired by TTL job                                           |
 
 ### `alerts.severity`
-| Value | UI Color | Use Case |
-|-------|----------|---------|
-| `info` | Blue | Advisories, watches |
-| `warning` | Yellow | Elevated risk |
-| `danger` | Orange | High risk, pre-evacuation |
-| `critical` | Red | Immediate evacuation orders |
+
+| Value        | UI Color | Use Case                    |
+| ------------ | -------- | --------------------------- |
+| `info`     | Blue     | Advisories, watches         |
+| `warning`  | Yellow   | Elevated risk               |
+| `danger`   | Orange   | High risk, pre-evacuation   |
+| `critical` | Red      | Immediate evacuation orders |
 
 ### `users.role` Permissions Hierarchy
+
 ```
 super_admin
   └─ district_officer
@@ -355,20 +381,20 @@ super_admin
 
 ## 4. PostGIS Function Quick Reference
 
-| Operation | Function |
-|-----------|---------|
-| Point from lat/lng | `ST_GeographyFromText('SRID=4326;POINT(lng lat)')` |
-| Polygon from WKT | `ST_GeographyFromText('SRID=4326;POLYGON(...)')` |
-| To GeoJSON | `ST_AsGeoJSON(geometry::geometry)` |
-| Distance (metres) | `ST_Distance(geog1, geog2)` |
-| Within polygon | `ST_DWithin(point_geog, polygon_geog, 0)` |
-| Radius search | `ST_DWithin(point_geog, target_geog, radius_metres)` |
-| Area (m²) | `ST_Area(geometry::geometry)` |
-| Area (hectares) | `ST_Area(geometry::geometry) / 10000.0` |
-| Bounding box | `ST_Envelope(geometry::geometry)` |
-| Centroid | `ST_Centroid(geometry::geometry)` |
-| Buffer (metres) | `ST_Buffer(geometry::geography, metres)::geometry` |
-| Contains | `ST_Contains(polygon::geometry, point::geometry)` |
+| Operation          | Function                                               |
+| ------------------ | ------------------------------------------------------ |
+| Point from lat/lng | `ST_GeographyFromText('SRID=4326;POINT(lng lat)')`   |
+| Polygon from WKT   | `ST_GeographyFromText('SRID=4326;POLYGON(...)')`     |
+| To GeoJSON         | `ST_AsGeoJSON(geometry::geometry)`                   |
+| Distance (metres)  | `ST_Distance(geog1, geog2)`                          |
+| Within polygon     | `ST_DWithin(point_geog, polygon_geog, 0)`            |
+| Radius search      | `ST_DWithin(point_geog, target_geog, radius_metres)` |
+| Area (m²)         | `ST_Area(geometry::geometry)`                        |
+| Area (hectares)    | `ST_Area(geometry::geometry) / 10000.0`              |
+| Bounding box       | `ST_Envelope(geometry::geometry)`                    |
+| Centroid           | `ST_Centroid(geometry::geometry)`                    |
+| Buffer (metres)    | `ST_Buffer(geometry::geography, metres)::geometry`   |
+| Contains           | `ST_Contains(polygon::geometry, point::geometry)`    |
 
 ---
 
@@ -399,5 +425,5 @@ psql -U aegis_user -d aegis_db -f 001_initial_schema.sql
 psql -U aegis_user -d aegis_db -f 002_seed_data.sql
 ```
 
-**Required PostgreSQL version:** 12+  
+**Required PostgreSQL version:** 12+
 **Required PostGIS version:** 3.0+

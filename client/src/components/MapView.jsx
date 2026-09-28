@@ -70,10 +70,11 @@ export default function MapView({
       zoomControl: true,
     });
 
-    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       subdomains: ['a', 'b', 'c', 'd'],
-      attribution: '&copy; CARTO &copy; OpenStreetMap | Aegis AI',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Aegis AI',
       maxZoom: 18,
+      className: 'map-tiles-dark'
     }).addTo(map);
 
     // Dark Legend

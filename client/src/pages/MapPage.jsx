@@ -45,8 +45,8 @@ L.Icon.Default.mergeOptions({
 });
 
 /* ── CartoDB DarkMatter Tiles ───────────────────────────────── */
-const DARK_TILES = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png';
-const DARK_ATTR  = '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Aegis AI';
+const DARK_TILES = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const DARK_ATTR  = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Aegis AI';
 
 /* ── Risk color map ──────────────────────────────────────────── */
 const RISK_COLOR = {
@@ -209,6 +209,7 @@ export default function MapPage() {
       subdomains: ['a', 'b', 'c', 'd'],
       attribution: DARK_ATTR,
       maxZoom: 19,
+      className: 'map-tiles-dark',
     }).addTo(map);
 
     // Zoom control on top-right
