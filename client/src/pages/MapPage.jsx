@@ -206,7 +206,7 @@ export default function MapPage() {
     });
 
     L.tileLayer(MAP_TILES, {
-      subdomains: ['a', 'b', 'c', 'd'],
+      subdomains: ['a', 'b', 'c'],
       attribution: MAP_ATTR,
       maxZoom: 19,
       

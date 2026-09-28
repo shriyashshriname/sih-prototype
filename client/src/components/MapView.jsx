@@ -71,7 +71,7 @@ export default function MapView({
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      subdomains: ['a', 'b', 'c', 'd'],
+      subdomains: ['a', 'b', 'c'],
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Aegis AI',
       maxZoom: 18,
       
